@@ -1,16 +1,26 @@
 #!/bin/bash
 
 DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
-CONFIG_DIR="$HOME/.config/qtile"
 
-echo "Installing Qtile dotfiles from $DOTFILES_DIR"
+echo "Installing dotfiles from $DOTFILES_DIR"
 
-# Backup existing config if it's not already a symlink
-if [ -d "$CONFIG_DIR" ] && [ ! -L "$CONFIG_DIR" ]; then
-    echo "Backing up existing config to $CONFIG_DIR.bak"
-    mv "$CONFIG_DIR" "$CONFIG_DIR.bak"
-fi
+CONFIGS=(qtile ghostty alacritty fish fontconfig nvim rofi)
 
-# Create symlink
-ln -sfn "$DOTFILES_DIR" "$CONFIG_DIR"
-echo "Symlinked $CONFIG_DIR -> $DOTFILES_DIR"
+for app in "${CONFIGS[@]}"; do
+    target="$HOME/.config/$app"
+    source="$DOTFILES_DIR/$app"
+
+    # Skip if source doesn't exist (e.g. qtile points to whole repo)
+    if [ "$app" = "qtile" ]; then
+        source="$DOTFILES_DIR"
+    fi
+
+    # Backup if exists and not already a symlink
+    if [ -d "$target" ] && [ ! -L "$target" ]; then
+        echo "Backing up $target to $target.bak"
+        mv "$target" "$target.bak"
+    fi
+
+    ln -sfn "$source" "$target"
+    echo "Symlinked $target -> $source"
+done
