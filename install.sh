@@ -4,7 +4,7 @@ DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 echo "Installing dotfiles from $DOTFILES_DIR"
 
-CONFIGS=(qtile ghostty alacritty fish fontconfig nvim rofi)
+CONFIGS=(qtile ghostty alacritty fish fontconfig nvim rofi fastfetch)
 
 for app in "${CONFIGS[@]}"; do
     target="$HOME/.config/$app"
