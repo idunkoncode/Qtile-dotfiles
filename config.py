@@ -18,6 +18,9 @@ from libqtile.dgroups import simple_key_binder
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
 
+import glob as _glob
+HAS_BATTERY = bool(_glob.glob("/sys/class/power_supply/BAT*"))
+
 mod = "mod4"
 terminal = "ghostty"
 browser = "firefox"
@@ -78,17 +81,17 @@ keys = [
     Key(
         [],
         "XF86AudioRaiseVolume",
-        lazy.spawn("pactl set-sink-volume 0 +5%"),
+        lazy.spawn("pamixer -i 5"),
         desc="Volume Up",
     ),
     Key(
         [],
         "XF86AudioLowerVolume",
-        lazy.spawn("pactl set-sink-volume 0 -5%"),
+        lazy.spawn("pamixer -d 5"),
         desc="volume down",
     ),
     Key(
-        [], "XF86AudioMute", lazy.spawn("pulsemixer --toggle-mute"), desc="Volume Mute"
+        [], "XF86AudioMute", lazy.spawn("pamixer --toggle-mute"), desc="Volume Mute"
     ),
     Key([], "XF86AudioPlay", lazy.spawn("playerctl play-pause"), desc="playerctl"),
     Key([], "XF86AudioPrev", lazy.spawn("playerctl previous"), desc="playerctl"),
@@ -274,9 +277,9 @@ screens = [
                 widget.Image(
                     filename="~/.config/qtile/Assets/3.png",
                 ),
-                widget.Systray(
+                widget.StatusNotifier(
                     background="#282828",
-                    fontsize=2,
+                    padding=4,
                 ),
                 widget.TextBox(
                     text=" ",
@@ -308,27 +311,29 @@ screens = [
                     length=8,
                     background="#3c3836",
                 ),
-                widget.TextBox(
-                    text=" ",
-                    font="Font Awesome 6 Free Solid",
-                    fontsize=13,
-                    background="#3c3836",
-                    foreground="#ebdbb2",
-                ),
-                widget.Battery(
-                    font="JetBrainsMono Nerd Font Bold",
-                    fontsize=13,
-                    background="#3c3836",
-                    foreground="#ebdbb2",
-                    format="{percent:2.0%}",
-                ),
-                widget.Image(
-                    filename="~/.config/qtile/Assets/2.png",
-                ),
-                widget.Spacer(
-                    length=8,
-                    background="#3c3836",
-                ),
+                *([
+                    widget.TextBox(
+                        text=" ",
+                        font="Font Awesome 6 Free Solid",
+                        fontsize=13,
+                        background="#3c3836",
+                        foreground="#ebdbb2",
+                    ),
+                    widget.Battery(
+                        font="JetBrainsMono Nerd Font Bold",
+                        fontsize=13,
+                        background="#3c3836",
+                        foreground="#ebdbb2",
+                        format="{percent:2.0%}",
+                    ),
+                    widget.Image(
+                        filename="~/.config/qtile/Assets/2.png",
+                    ),
+                    widget.Spacer(
+                        length=8,
+                        background="#3c3836",
+                    ),
+                ] if HAS_BATTERY else []),
                 widget.TextBox(
                     text=" ",
                     font="Font Awesome 6 Free Solid",
