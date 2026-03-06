@@ -20,8 +20,9 @@ from libqtile.utils import guess_terminal
 
 mod = "mod4"
 terminal = "ghostty"
-browser = "thorium"
+browser = "firefox"
 filemanager = "thunar"
+menu = "rofi -show drun -l 12"
 
 # █▄▀ █▀▀ █▄█ █▄▄ █ █▄░█ █▀▄ █▀
 # █░█ ██▄ ░█░ █▄█ █ █░▀█y █▄▀ ▄█
@@ -33,7 +34,6 @@ keys = [
     Key([mod], "l", lazy.layout.right(), desc="Move focus to right"),
     Key([mod], "j", lazy.layout.down(), desc="Move focus down"),
     Key([mod], "k", lazy.layout.up(), desc="Move focus up"),
-    Key([mod], "d", lazy.spawn("sh -c ~/.config/rofi/scripts/launcher"), desc="Spawn a command using a prompt widget"),
     Key(
         [mod, "control"],
         "h",
@@ -106,7 +106,7 @@ keys = [
         desc="brightness Down",
     ),
     Key([mod], "f", lazy.spawn(filemanager), desc="file manager"),
-    Key([mod], "c", lazy.spawn("roficlip"), desc="clipboard"),
+    Key([mod], "d", lazy.spawn(menu), desc="Launch rofi"),
     Key([mod], "s", lazy.spawn("flameshot gui"), desc="Screenshot"),
     Key([mod], "a", lazy.spawn("plasma-discover"), desc="KDE Discover"),
 ]
@@ -181,11 +181,11 @@ extension_defaults = widget_defaults.copy()
 
 
 def search():
-    qtile.cmd_spawn("rofi -show drun")
+    qtile.spawn("rofi -show drun")
 
 
 def power():
-    qtile.cmd_spawn("sh -c ~/.config/rofi/scripts/power")
+    qtile.spawn("sh -c ~/.config/rofi/scripts/power")
 
 
 # █▄▄ ▄▀█ █▀█
